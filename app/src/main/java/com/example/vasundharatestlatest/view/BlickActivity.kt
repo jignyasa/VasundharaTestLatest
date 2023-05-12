@@ -19,7 +19,7 @@ class BlickActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.btnStart.setOnClickListener {
-            if(binding.etNumber.length()>0){
+            if(binding.etNumber.length()>0 && binding.etNumber.text.toString().toInt()>3){
                 startActivity(Intent(this@BlickActivity,BlinkResultActivity::class.java).putExtra(Constant.NUMBER,binding.etNumber.text.toString().toInt()))
             }else{
                 Toast.makeText(this@BlickActivity,getString(R.string.enterProperValue),Toast.LENGTH_SHORT).show()

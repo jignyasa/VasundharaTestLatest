@@ -1,8 +1,11 @@
 package com.example.vasundharatest.view
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -20,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AppDetailActivity : AppCompatActivity(),OnItemClickListener {
+class AppDetailActivity : AppCompatActivity(), OnItemClickListener {
     lateinit var viewModel: AppDetailsViewModel
     lateinit var binding: ActivityMainBinding
     lateinit var adapter: AppdetailAdapter
@@ -48,18 +51,23 @@ class AppDetailActivity : AppCompatActivity(),OnItemClickListener {
     }
 
     private fun initView() {
-        binding.viewModel=viewModel
+        binding.viewModel = viewModel
         adapter = AppdetailAdapter(this)
         binding.rvAppDetails.adapter = adapter
         binding.rvAppDetails.layoutManager = LinearLayoutManager(this)
         binding.btnBlickBox.setOnClickListener {
-            startActivity(Intent(this@AppDetailActivity,BlickActivity::class.java))
+            startActivity(Intent(this@AppDetailActivity, BlickActivity::class.java))
         }
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this@AppDetailActivity).get(AppDetailsViewModel::class.java)
-        viewModel.getData()
+        if (isConnected()) {
+            viewModel.getData()
+        } else {
+            Toast.makeText(this@AppDetailActivity, "no internet available", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     override fun onItemClick(data: SubCategoryItem) {
@@ -68,5 +76,19 @@ class AppDetailActivity : AppCompatActivity(),OnItemClickListener {
             Uri.parse("https://play.google.com/store/apps/details?id=${data.appLink}")
         )
         startActivity(viewIntent)
+    }
+
+    fun isConnected(): Boolean {
+        var connected = false
+        try {
+            val cm =
+                applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val nInfo = cm.activeNetworkInfo
+            connected = nInfo != null && nInfo.isAvailable && nInfo.isConnected
+            return connected
+        } catch (e: Exception) {
+            Log.e("Connectivity Exception", e.message.toString())
+        }
+        return connected
     }
 }

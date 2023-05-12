@@ -29,12 +29,13 @@ class BlinkAdapter(val listener: OnItemClickPositionListener) :
     }
 
     override fun onBindViewHolder(holder: BlinkViewHolder, position: Int) {
-        binding.tvAppName.text = list.get(position).position.toString()
+        var data= list.get(position)
+        binding.tvAppName.visibility=(if(data.isVisible) View.VISIBLE else View.GONE)
         binding.root.setOnClickListener { listener.onItemClick(position) }
     }
 
     fun addData(appList: ArrayList<BlinkModel>) {
-        list = appList
+         list = appList
         notifyDataSetChanged()
     }
 
