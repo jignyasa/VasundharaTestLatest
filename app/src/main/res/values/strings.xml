@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Vasundhara test</string>
+    <string name="download">Download</string>
+    <string name="blickBox">Go To Blink Box</string>
+    <string name="start">Start</string>
+    <string name="enterNumber">Enter Number</string>
+    <string name="enterProperValue">Please enter proper value</string>
+</resources>
